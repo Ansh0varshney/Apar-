@@ -13,7 +13,7 @@ const upload = multer({ dest: 'uploads/' }); // Uploads will be stored in the 'u
 // Middleware
 app.use(bodyParser.json());
 app.use(cors());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(__dirname));
 
 // MongoDB Atlas connection URI
 const uri = "mongodb+srv://anshv0606:rn5jUr2aPjSudUUK@clusterapar.asemiel.mongodb.net/?retryWrites=true&w=majority&appName=ClusterAPAR";
@@ -671,7 +671,7 @@ app.get('/outers', async (req, res) => {
 
 // Serve the index.html file
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'main.html'));
+    res.sendFile(path.join(__dirname, 'main.html'));
 });
 
 app.listen(port, () => {
