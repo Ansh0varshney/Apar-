@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="CSS/dash.css">
+</head>
+<body>
+    <h2>Conductor Data</h2>
+    <table id="conductor-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>SO</th>
+                <th>Customer Name</th>
+                <th>Size</th>
+                <th>Conductor Type</th>
+                <th>Drum Number</th>
+                <th>Balance Length</th>
+                <th>Cable Type</th>
+                <th>Cut Length</th>
+                <th>Remarks</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Conductor data will be dynamically populated here -->
+        </tbody>
+    </table>
+
+    <h2>Insulator Data</h2>
+    <table id="insulator-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>SO</th>
+                <th>Customer Name</th>
+                <th>Size</th>
+                <th>Drum Number</th>
+                <th>Color</th>
+                <th>Insulated Length</th>
+                <th>Conductor Drum Number</th>
+                <th>Remarks</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Insulator data will be dynamically populated here -->
+        </tbody>
+    </table>
+
+    <h2>LUP Data</h2>
+    <table id="lup-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>SO</th>
+                <th>Customer Name</th>
+                <th>Size</th>
+                <th>Drum Number</th>
+                <th>Length</th>
+                <th>Insulation Drum Number 1</th>
+                <th>Insulation Drum Number 2</th>
+                <th>Insulation Drum Number 3</th>
+                <th>Insulation Drum Number 4</th>
+                <th>Insulation Drum Number 5</th>
+                <th>Remarks</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- LUP data will be dynamically populated here -->
+        </tbody>
+    </table>
+
+    <h2>Inner Sheath Data</h2>
+    <table id="inner-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>SO</th>
+                <th>Customer Name</th>
+                <th>Size</th>
+                <th>Drum Number</th>
+                <th>Length</th>
+                <th>LUP Drum Number</th>
+                <th>Insulation Drum Number</th>
+                <th> Remarks</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Inner data will be dynamically populated here -->
+        </tbody>
+    </table>
+
+    <h2>Armour Data</h2>
+    <table id="armour-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>SO</th>
+                <th>Customer Name</th>
+                <th>Size</th>
+                <th>Drum Number</th>
+                <th>Length</th>
+                <th>Inner Drum Number</th>
+                <th>LUP Drum Number</th>
+                <th>Insulation Drum Number</th>
+                <th> Remarks</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Armour data will be dynamically populated here -->
+        </tbody>
+    </table>
+
+    <h2>Outer Sheath Data</h2>
+    <table id="outer-table">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>SO</th>
+                <th>Customer Name</th>
+                <th>Size</th>
+                <th>Drum Number</th>
+                <th>Length</th>
+                <th>Armour Drum Number</th>
+                <th>Inner Drum Number</th>
+                <th>LUP Drum Number</th>
+                <th>Insulation Drum Number</th>
+                <th> Remarks</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Outer data will be dynamically populated here -->
+        </tbody>
+    </table>
+
+    <script>
+        function fetchData() {
+            Promise.all([
+                fetch('http://localhost:8000/conductors').then(response => response.json()),
+                fetch('http://localhost:8000/insulations').then(response => response.json()),
+                fetch('http://localhost:8000/LUPs').then(response => response.json()),
+                fetch('http://localhost:8000/inners').then(response => response.json()),
+                fetch('http://localhost:8000/armours').then(response => response.json()),
+                fetch('http://localhost:8000/outers').then(response => response.json())
+            ])
+            .then(([conductors, insulators, lups, inners, armours, outers]) => {
+                const conductorTbody = document.querySelector('#conductor-table tbody');
+                const insulatorTbody = document.querySelector('#insulator-table tbody');
+                const lupTbody = document.querySelector('#lup-table tbody');
+                const innerTbody = document.querySelector('#inner-table tbody');
+                const armourTbody = document.querySelector('#armour-table tbody');
+                const outerTbody = document.querySelector('#outer-table tbody');
+
+                conductorTbody.innerHTML = '';
+                insulatorTbody.innerHTML = '';
+                lupTbody.innerHTML = '';
+                innerTbody.innerHTML = '';
+                armourTbody.innerHTML = '';
+                outerTbody.innerHTML = '';
+
+                // Populate conductor data
+                conductors.forEach(conductor => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${new Date(conductor.date).toLocaleDateString()}</td>
+                        <td>${conductor.SO}</td>
+                        <td>${conductor.customerName}</td>
+                        <td>${conductor.size}</td>
+                        <td>${conductor.conductorType}</td>
+                        <td>${conductor.drumNumber}</td>
+                        <td>${conductor.balanceLength}</td>
+                        <td>${conductor.cableType}</td>
+                        <td>${conductor.cutLength}</td>
+                        <td>${conductor.remarks}</td>
+                    `;
+                    conductorTbody.appendChild(row);
+                });
+
+                // Populate insulator data
+                insulators.forEach(insulator => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${new Date(insulator.date).toLocaleDateString()}</td>
+                        <td>${insulator.SO}</td>
+                        <td>${insulator.customerName}</td>
+                        <td>${insulator.size}</td>
+                        <td>${insulator.drumNumber}</td>
+                        <td>${insulator.color}</td>
+                        <td>${insulator.insulatedLength}</td>
+                        <td>${insulator.conductorDrumNumber}</td>
+                        <td>${insulator.remarks}</td>
+                    `;
+                    insulatorTbody.appendChild(row);
+                });
+                <!-- Populate LUP data -->
+lups.forEach(lup => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td>${new Date(lup.date).toLocaleDateString()}</td>
+        <td>${lup.SO}</td>
+        <td>${lup.customerName}</td>
+        <td>${lup.size}</td>
+        <td>${lup.drumNumber}</td>
+        <td>${lup.length}</td>
+        <td>${lup.insulationDrumNumber1}</td>
+        <td>${lup.insulationDrumNumber2 || ''}</td>
+        <td>${lup.insulationDrumNumber3 || ''}</td>
+        <td>${lup.insulationDrumNumber4 || ''}</td>
+        <td>${lup.insulationDrumNumber5 || ''}</td>
+        <td>${lup.remarks}</td>
+    `;
+    lupTbody.appendChild(row);
+});
+
+// Populate inner data
+inners.forEach(inner => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td>${new Date(inner.date).toLocaleDateString()}</td>
+        <td>${inner.SO}</td>
+        <td>${inner.customerName}</td>
+        <td>${inner.size}</td>
+        <td>${inner.drumNumber}</td>
+        <td>${inner.length}</td>
+        <td>${inner.lupDrumNumber || ''}</td>
+        <td>${inner.insulationDrumNumber || ''}</td>
+        <td>${inner.remarks}</td>
+    `;
+    innerTbody.appendChild(row);
+});
+
+// Populate armour data
+armours.forEach(armour => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td>${new Date(armour.date).toLocaleDateString()}</td>
+        <td>${armour.SO}</td>
+        <td>${armour.customerName}</td>
+        <td>${armour.size}</td>
+        <td>${armour.drumNumber}</td>
+        <td>${armour.length}</td>
+        <td>${armour.innerDrumNumber || ''}</td>
+        <td>${armour.lupDrumNumber || ''}</td>
+        <td>${armour.insulationDrumNumber || ''}</td>
+        <td>${armour.remarks}</td>
+    `;
+    armourTbody.appendChild(row);
+});
+
+// Populate outer data
+outers.forEach(outer => {
+    const row = document.createElement('tr');
+    row.innerHTML = `
+        <td>${new Date(outer.date).toLocaleDateString()}</td>
+        <td>${outer.SO}</td>
+        <td>${outer.customerName}</td>
+        <td>${outer.size}</td>
+        <td>${outer.drumNumber}</td>
+        <td>${outer.length}</td>
+        <td>${outer.armourDrumNumber || ''}</td>
+        <td>${outer.innerDrumNumber || ''}</td>
+        <td>${outer.lupDrumNumber || ''}</td>
+        <td>${outer.insulationDrumNumber || ''}</td>
+        <td>${outer.remarks}</td>
+    `;
+    outerTbody.appendChild(row);
+});
+})
+.catch(error => {
+    console.error('Error fetching data:', error);
+});
+}
+
+// Fetch data on page load
+document.addEventListener('DOMContentLoaded', fetchData);
+</script>
+</body>
+</html>

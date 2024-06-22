@@ -1,0 +1,407 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inner Data Input</title>
+    <link rel="stylesheet" href="CSS/insulation.css">
+    <style>
+        /* Additional styles for the tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .data-table {
+            margin-top: 30px;
+        }
+        /* Style for the auto-suggest dropdown */
+        .suggestions {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            max-height: 150px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1000;
+        }
+        .suggestions div {
+            padding: 8px;
+            cursor: pointer;
+        }
+        .suggestions div:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Inner Data Input</h1>
+    <div class="form-container">
+        <form id="innerForm" action="http://localhost:8000/inner" method="POST">
+            <table>
+                <tr>
+                    <th><label for="date">Date:</label></th>
+                    <td><input type="date" id="date" name="date" required></td>
+                </tr>
+                <tr>
+                    <th><label for="SO">SO Number:</label></th>
+                    <td><input type="number" id="SO" name="SO" required></td>
+                </tr>
+                <tr>
+                    <th><label for="customerName">Customer Name:</label></th>
+                    <td><input type="text" id="customerName" name="customerName"></td>
+                </tr>
+                <tr>
+                    <th><label for="size">Size:</label></th>
+                    <td><input type="text" id="size" name="size" required></td>
+                </tr>
+                <tr>
+                    <th><label for="drumNumber">Drum Number:</label></th>
+                    <td><input type="text" id="drumNumber" name="drumNumber" required></td>
+                </tr>
+                <tr>
+                    <th><label for="length">Length:</label></th>
+                    <td><input type="number" id="length" name="length" required></td>
+                </tr>
+                <tr>
+                    <th><label for="lupDrumNumber">L-UP Drum Number:</label></th>
+                    <td>
+                        <input type="text" id="lupDrumNumber" name="lupDrumNumber" autocomplete="off">
+                        <div id="lupSuggestions" class="suggestions"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="insulationDrumNumber">Insulation Drum Number:</label></th>
+                    <td>
+                        <input type="text" id="insulationDrumNumber" name="insulationDrumNumber"  autocomplete="off">
+                        <div id="insulationSuggestions" class="suggestions"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="remarks">Remarks:</label></th>
+                    <td><input type="text" id="remarks" name="remarks" required></td>
+                </tr>
+
+            </table>
+            <div class="button-container">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+
+
+    <div id="inner-table" class="data-table">
+        <h2>Available Inner Data</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Drum Number</th>
+                    <th>Length</th>
+                    <th>LUP Drum Number</th>
+                    <th>Insulation Drum Number</th>
+                    <th>Remarks</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Inner data will be populated here -->
+            </tbody>
+        </table>
+    </div>
+
+
+<!-- Table to display LUP data -->
+<div id="lup-table" class="data-table">
+    <h2>Available LUP Data</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Length Available</th>
+                <th>Drum Number</th>
+                <!-- Add more table headers as needed -->
+            </tr>
+        </thead>
+        <tbody>
+            <!-- LUP data will be populated here -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Table to display insulation data -->
+<div id="insulation-table" class="data-table">
+    <h2>Available Insulation Data</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Insulation Number</th>
+                <th>Length Available</th>
+                <th>conductor Drum No.</th>
+                <th>Remarks</th>
+                <!-- Add more table headers as needed -->
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Insulation data will be populated here -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchLUPData();
+        fetchInsulationData();
+        fetchInnerData();
+    });
+
+
+    function fetchInnerData() {
+    fetch('http://localhost:8000/inners')
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.querySelector('#inner-table tbody');
+            tbody.innerHTML = '';
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                const remarksNotOK = item.remarks && item.remarks.toLowerCase() !== 'ok';
+                row.innerHTML = `
+                    <td>${new Date(item.date).toLocaleDateString()}</td>
+                    <td>${remarksNotOK ? `<input type="text" value="${item.drumNumber}" class="edit-drum-number" data-id="${item._id}">` : item.drumNumber}</td>
+                    <td>${remarksNotOK ? `<input type="number" value="${item.length}" class="edit-length" data-id="${item._id}">` : item.length}</td>
+                    <td>${item.lupDrumNumber}</td>
+                    <td>${item.insulationDrumNumber}</td>
+                    <td>${remarksNotOK ? `<input type="text" value="${item.remarks}" class="edit-remarks" data-id="${item._id}">` : item.remarks}</td>
+                    <td>${remarksNotOK ? `<button class="update-btn" data-id="${item._id}">Rewinding</button>` : ''} <button class="delete-btn" data-id="${item._id}">FG</button></td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            // Add event listeners for delete and update buttons
+            const deleteButtons = document.querySelectorAll('.delete-btn');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', deleteInnerEntry);
+            });
+
+            const updateButtons = document.querySelectorAll('.update-btn');
+            updateButtons.forEach(button => {
+                button.addEventListener('click', updateInnerEntry);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching inner data:', error);
+        });
+}
+
+function updateInnerEntry(event) {
+    const entryId = event.target.dataset.id;
+    const row = event.target.closest('tr');
+    const newDrumNumber = row.querySelector('.edit-drum-number').value;
+    const newLength = row.querySelector('.edit-length').value;
+    const newRemarks = row.querySelector('.edit-remarks').value;
+
+    const updatedData = {
+        drumNumber: newDrumNumber,
+        length: newLength,
+        remarks: newRemarks
+    };
+
+    fetch(`http://localhost:8000/inners/${entryId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        alert('Hoorraah!! Rewinding done');
+        fetchInnerData(); // Refresh the data
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        alert('Update unsuccessful.');
+    });
+}
+
+function deleteInnerEntry(event) {
+    const entryId = event.target.dataset.id;
+
+    if (confirm('Are you sure you want to do FG?')) {
+        fetch(`http://localhost:8000/inners/${entryId}`, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('FG done successfully');
+                fetchInnerData(); // Refresh inner data
+            } else {
+                alert('FG not done ');
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting entry:', error);
+            alert('Error deleting entry');
+        });
+    }
+}
+
+
+
+    function fetchLUPData() {
+        fetch('http://localhost:8000/LUPs')
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.querySelector('#lup-table tbody');
+            tbody.innerHTML = '';
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${new Date(item.date).toLocaleDateString()}</td>
+                    <td>${item.length}</td>
+                    <td>${item.drumNumber}</td>
+                    <!-- Add more table cells as needed -->
+                `;
+                tbody.appendChild(row);
+            });
+
+            // Store LUP data for suggestions
+            window.LUPs = data;
+        })
+        .catch(error => {
+            console.error('Error fetching LUP data:', error);
+        });
+    }
+
+    function fetchInsulationData() {
+            fetch('http://localhost:8000/insulations')
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.querySelector('#insulation-table tbody');
+                    tbody.innerHTML = '';
+                    data.forEach(item => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${new Date(item.date).toLocaleDateString()}</td>
+                            <td>${item.drumNumber}</td>
+                            <td>${item.insulatedLength}</td>
+                            <td>${item.drumNumber}</td>
+                            <td>${item.remarks}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+
+                    // Store conductor data for suggestions
+                    window.insulations = data;
+                })
+                .catch(error => {
+                    console.error('Error fetching insulation data:', error);
+                });
+            }
+
+    // Auto-suggest functionality for lupDrumNumber
+    const lupInput = document.getElementById('lupDrumNumber');
+    const lupSuggestionsDiv = document.getElementById('lupSuggestions');
+
+    lupInput.addEventListener('input', function() {
+        const value = this.value.toLowerCase();
+        const filteredLUPs = window.LUPs.filter(lup => 
+            lup.drumNumber.toLowerCase().includes(value)
+        );
+
+        lupSuggestionsDiv.innerHTML = '';
+        filteredLUPs.slice(0, 5).forEach(lup => {
+            const div = document.createElement('div');
+            div.textContent = lup.drumNumber;
+            div.onclick = function() {
+                lupInput.value = lup.drumNumber;
+                lupSuggestionsDiv.style.display = 'none';
+            };
+            lupSuggestionsDiv.appendChild(div);
+        });
+
+        lupSuggestionsDiv.style.display = filteredLUPs.length > 0 ? 'block' : 'none';
+    });
+
+    // Auto-suggest functionality for insulationDrumNumber
+    const insulationInput = document.getElementById('insulationDrumNumber');
+    const insulationSuggestionsDiv = document.getElementById('insulationSuggestions');
+
+    insulationInput.addEventListener('input', function() {
+        const value = this.value.toLowerCase();
+        const filteredInsulations = window.insulations.filter(insulation => 
+            insulation.drumNumber.toLowerCase().includes(value)
+        );
+
+        insulationSuggestionsDiv.innerHTML = '';
+        filteredInsulations.slice(0, 5).forEach(insulation => {
+            const div = document.createElement('div');
+            div.textContent = insulation.drumNumber;
+            div.onclick = function() {
+                insulationInput.value = insulation.drumNumber;
+                insulationSuggestionsDiv.style.display = 'none';
+            };
+            insulationSuggestionsDiv.appendChild(div);
+        });
+
+        insulationSuggestionsDiv.style.display = filteredInsulations.length > 0 ? 'block' : 'none';
+    });
+
+    document.addEventListener('click', function(e) {
+        if (e.target !== lupInput && e.target !== lupSuggestionsDiv) {
+            lupSuggestionsDiv.style.display = 'none';
+        }
+        if (e.target !== insulationInput && e.target !== insulationSuggestionsDiv) {
+            insulationSuggestionsDiv.style.display = 'none';
+        }
+    });
+
+    document.getElementById('innerForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    if (confirm('Are you sure you want to submit the data?')) {
+    const formData = {
+        date: document.getElementById('date').value,
+        SO: document.getElementById('SO').value,
+        customerName: document.getElementById('customerName').value,
+        size: document.getElementById('size').value,
+        drumNumber: document.getElementById('drumNumber').value,
+        length: document.getElementById('length').value,
+        lupDrumNumber: document.getElementById('lupDrumNumber').value,
+        insulationDrumNumber: document.getElementById('insulationDrumNumber').value,
+        remarks: document.getElementById('remarks').value  // Added line to collect remarks
+    };
+    
+    fetch('http://localhost:8000/inner', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        alert('Inner data submitted successfully!');
+        this.reset(); // Clear the form
+        fetchLUPData(); // Refresh LUP data
+        fetchInsulationData(); // Refresh insulation data
+        fetchInnerData();
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        alert('Error submitting data.');
+    });
+}
+});
+
+</script>
+</body>
+</html>

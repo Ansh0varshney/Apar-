@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LUP Data Input</title>
+    <link rel="stylesheet" href="CSS/insulation.css">
+    <style>
+        /* Additional styles for the tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .data-table {
+            margin-top: 30px;
+        }
+        /* Style for the auto-suggest dropdown */
+        .suggestions-container {
+            position: relative;
+        }
+        .suggestions {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            max-height: 150px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1000;
+            width: 100%;
+        }
+        .suggestions div {
+            padding: 8px;
+            cursor: pointer;
+        }
+        .suggestions div:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <h1>LUP Data Input</h1>
+    <div class="form-container">
+        <form id="lupForm">
+            <table>
+                <tr>
+                    <th><label for="date">Date:</label></th>
+                    <td><input type="date" id="date" name="date" required></td>
+                </tr>
+                <tr>
+                    <th><label for="SO">SO Number:</label></th>
+                    <td><input type="number" id="SO" name="SO" required></td>
+                </tr>
+                <tr>
+                    <th><label for="CustomerName">Customer Name:</label></th>
+                    <td><input type="text" id="CustomerName" name="CustomerName"></td>
+                </tr>
+                <tr>
+                    <th><label for="size">Size:</label></th>
+                    <td><input type="text" id="size" name="size" required></td>
+                </tr>
+                <tr>
+                    <th><label for="drumNumber">Drum Number:</label></th>
+                    <td><input type="text" id="drumNumber" name="drumNumber" required></td>
+                </tr>
+                <tr>
+                    <th><label for="Length">Length:</label></th>
+                    <td><input type="number" id="Length" name="Length" required></td>
+                </tr>
+                <tr>
+                    <th><label for="insulationDrumNumber1">Insulation Drum Number 1:</label></th>
+                    <td class="suggestions-container">
+                        <input type="text" id="insulationDrumNumber1" name="insulationDrumNumber1" required autocomplete="off">
+                        <div class="suggestions" id="suggestions1"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="insulationDrumNumber2">Insulation Drum Number 2:</label></th>
+                    <td class="suggestions-container">
+                        <input type="text" id="insulationDrumNumber2" name="insulationDrumNumber2" autocomplete="off">
+                        <div class="suggestions" id="suggestions2"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="insulationDrumNumber3">Insulation Drum Number 3:</label></th>
+                    <td class="suggestions-container">
+                        <input type="text" id="insulationDrumNumber3" name="insulationDrumNumber3" autocomplete="off">
+                        <div class="suggestions" id="suggestions3"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="insulationDrumNumber4">Insulation Drum Number 4:</label></th>
+                    <td class="suggestions-container">
+                        <input type="text" id="insulationDrumNumber4" name="insulationDrumNumber4" autocomplete="off">
+                        <div class="suggestions" id="suggestions4"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="insulationDrumNumber5">Insulation Drum Number 5:</label></th>
+                    <td class="suggestions-container">
+                        <input type="text" id="insulationDrumNumber5" name="insulationDrumNumber5" autocomplete="off">
+                        <div class="suggestions" id="suggestions5"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="remarks">Remarks:</label></th>
+                    <td><textarea id="remarks" name="remarks"></textarea></td>
+                </tr>
+            </table>
+            <div class="button-container">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Table to display LUP data -->
+    <div id="lup-table" class="data-table">
+        <h2>Available LUP Data</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Drum Number</th>
+                    <th>Length</th>
+                    <th>Insulation Drum Numbers</th>
+                    <th>Remarks</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- LUP data will be populated here -->
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Table to display insulation data -->
+    <div id="insulation-table" class="data-table">
+        <h2>Available Insulation Data</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Drum Number</th>
+                    <th>Length </th>
+                    <th>Conductor Drum Number</th>
+                    <th>Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Insulation data will be populated here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchLUPData();
+            fetchInsulationData();
+            setupAutoSuggest();
+        });
+
+        function fetchInsulationData() {
+            fetch('http://localhost:8000/insulations')
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.querySelector('#insulation-table tbody');
+                    tbody.innerHTML = '';
+                    data.forEach(item => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${new Date(item.date).toLocaleDateString()}</td>
+                            <td>${item.drumNumber}</td>
+                            <td>${item.insulatedLength}</td>
+                            <td>${item.conductorDrumNumber}</td>
+                            <td>${item.remarks}</td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+
+                    // Store conductor data for suggestions
+                    window.insulations = data;
+                })
+                .catch(error => {
+                    console.error('Error fetching insulation data:', error);
+                });
+            }
+
+        function fetchLUPData() {
+            fetch('http://localhost:8000/LUPs')
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.querySelector('#lup-table tbody');
+                    tbody.innerHTML = '';
+                    data.forEach(item => {
+                        const row = document.createElement('tr');
+                        const remarksNotOK = item.remarks && item.remarks.toLowerCase() !== 'ok';
+                        row.innerHTML = `
+                            <td>${new Date(item.date).toLocaleDateString()}</td>
+                            <td>${remarksNotOK ? `<input type="text" value="${item.drumNumber}" class="edit-drum-number" data-id="${item._id}">` : item.drumNumber}</td>
+                            <td>${remarksNotOK ? `<input type="number" value="${item.length}" class="edit-length" data-id="${item._id}">` : item.length}</td>
+                            <td>${remarksNotOK ? `
+                                <input type="text" value="${item.insulationDrumNumber1}" class="edit-insulation-drum-number" data-id="${item._id}" data-number="1">
+                                <input type="text" value="${item.insulationDrumNumber2}" class="edit-insulation-drum-number" data-id="${item._id}" data-number="2">
+                                <input type="text" value="${item.insulationDrumNumber3}" class="edit-insulation-drum-number" data-id="${item._id}" data-number="3">
+                                <input type="text" value="${item.insulationDrumNumber4}" class="edit-insulation-drum-number" data-id="${item._id}" data-number="4">
+                                <input type="text" value="${item.insulationDrumNumber5}" class="edit-insulation-drum-number" data-id="${item._id}" data-number="5">
+                            ` : `${item.insulationDrumNumber1} ${item.insulationDrumNumber2} ${item.insulationDrumNumber3} ${item.insulationDrumNumber4} ${item.insulationDrumNumber5}`}</td>
+                            <td>${remarksNotOK ? `<input type="text" value="${item.remarks}" class="edit-remarks" data-id="${item._id}">` : item.remarks}</td>
+                            <td>${remarksNotOK ? `<button class="update-btn" data-id="${item._id}">Rewinding</button>` : ''} <button class="delete-btn" data-id="${item._id}">FG</button></td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+
+                    // Add event listener for delete buttons
+                    const deleteButtons = document.querySelectorAll('.delete-btn');
+                    deleteButtons.forEach(button => {
+                        button.addEventListener('click', deleteEntry);
+                    });
+
+                    // Add event listener for update buttons
+                    const updateButtons = document.querySelectorAll('.update-btn');
+                    updateButtons.forEach(button => {
+                        button.addEventListener('click', updateEntry);
+                    });
+                })
+                .catch(error => {
+                    console.error('Error fetching LUP data:', error);
+                });
+        }
+
+        function updateEntry(event) {
+            const entryId = event.target.dataset.id;
+            const row = event.target.closest('tr');
+            const newDrumNumber = row.querySelector('.edit-drum-number').value;
+            const newLength = row.querySelector('.edit-length').value;
+            const newRemarks = row.querySelector('.edit-remarks').value;
+
+            const updatedData = {
+                drumNumber: newDrumNumber,
+                length: newLength,
+                remarks: newRemarks
+            };
+
+            fetch(`http://localhost:8000/LUPs/${entryId}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                alert('Rewinding done sucessfully!');
+                fetchLUPData(); // Refresh the data
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Unsuccessful.');
+            });
+        }
+
+        function deleteEntry(event) {
+                const entryId = event.target.dataset.id;
+
+                if (confirm('Are you sure you want to make it to Final Good?')) {
+                    fetch(`http://localhost:8000/LUPs/${entryId}`, {
+                        method: 'DELETE'
+                    })
+                    .then(response => {
+                        if (response.ok) {
+                            alert('HOORAHHH!!! Final Good done Successfully ');
+                            fetchInsulationData(); // Refresh insulation data
+                        } else {
+                            alert('Failed to delete entry');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error deleting entry:', error);
+                        alert('Error deleting entry');
+                    });
+                }
+            }
+
+    
+
+        function setupAutoSuggest() {
+            for (let i = 1; i <= 5; i++) {
+                const input = document.getElementById(`insulationDrumNumber${i}`);
+                const suggestionsDiv = document.getElementById(`suggestions${i}`);
+
+                input.addEventListener('input', function() {
+                    const value = this.value.toLowerCase();
+                    const filteredInsulations = window.insulations.filter(insulation =>
+                        insulation.drumNumber.toLowerCase().includes(value) &&
+                        (insulation.balanceLength > 0 || !('balanceLength' in insulation))
+                    );
+
+                    suggestionsDiv.innerHTML = '';
+                    filteredInsulations.slice(0, 5).forEach(insulation => {
+                        const div = document.createElement('div');
+                        div.textContent = `${insulation.drumNumber} (${insulation.balanceLength || 'N/A'}m, ${insulation.color || 'Unknown Color'})`;
+                        div.onclick = function() {
+                            input.value = insulation.drumNumber;
+                            suggestionsDiv.style.display = 'none';
+                        };
+                        suggestionsDiv.appendChild(div);
+                    });
+
+                    suggestionsDiv.style.display = filteredInsulations.length > 0 ? 'block' : 'none';
+                });
+            }
+        }
+
+        // Hide suggestions when clicking outside of the input or suggestions
+        document.addEventListener('click', function(e) {
+            const suggestionsDivs = document.querySelectorAll('.suggestions');
+            suggestionsDivs.forEach(suggestionsDiv => {
+                if (!e.target.matches('[id^="insulationDrumNumber"]') && e.target !== suggestionsDiv) {
+                    suggestionsDiv.style.display = 'none';
+                }
+            });
+        });
+
+        // Handle form submission
+        document.getElementById('lupForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            if (confirm('Are you sure you want to submit the data?')) {
+            const formData = {
+                date: document.getElementById('date').value,
+                SO: document.getElementById('SO').value,
+                CustomerName: document.getElementById('CustomerName').value,
+                size: document.getElementById('size').value,
+                drumNumber: document.getElementById('drumNumber').value,
+                length: document.getElementById('Length').value,
+                insulationDrumNumber1: document.getElementById('insulationDrumNumber1').value,
+                insulationDrumNumber2: document.getElementById('insulationDrumNumber2').value || null,
+                insulationDrumNumber3: document.getElementById('insulationDrumNumber3').value || null,
+                insulationDrumNumber4: document.getElementById('insulationDrumNumber4').value || null,
+                insulationDrumNumber5: document.getElementById('insulationDrumNumber5').value || null,
+                remarks: document.getElementById('remarks').value
+            };
+
+            fetch('http://localhost:8000/LUP', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                alert('LUP data submitted successfully!');
+                document.getElementById('lupForm').reset(); // Clear the form
+                fetchLUPData(); // Refresh the data
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Error submitting data.');
+            });
+        }
+        });
+    </script>
+</body>
+</html>

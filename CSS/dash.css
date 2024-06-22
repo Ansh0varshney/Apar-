@@ -1,0 +1,90 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+h2 {
+    color: #444;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+    margin-top: 40px;
+}
+
+/* Table styles */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f2f2f2;
+    color: #555;
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    table, th, td {
+        display: block;
+        width: 100%;
+    }
+    th, td {
+        padding: 10px;
+    }
+    th {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+    }
+    td {
+        position: relative;
+        padding-left: 50%;
+        text-align: right;
+    }
+    td:before {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        white-space: nowrap;
+        font-weight: bold;
+    }
+    td:nth-of-type(1):before { content: "Date"; }
+    td:nth-of-type(2):before { content: "SO"; }
+    td:nth-of-type(3):before { content: "Customer Name"; }
+    td:nth-of-type(4):before { content: "Size"; }
+    td:nth-of-type(5):before { content: "Conductor Type"; }
+    td:nth-of-type(6):before { content: "Drum Number"; }
+    td:nth-of-type(7):before { content: "Balance Length"; }
+    td:nth-of-type(8):before { content: "Cable Type"; }
+    td:nth-of-type(9):before { content: "Cut Length"; }
+    td:nth-of-type(10):before { content: "Remarks"; }
+    td:nth-of-type(11):before { content: "Color"; }
+    td:nth-of-type(12):before { content: "Insulated Length"; }
+    td:nth-of-type(13):before { content: "Conductor Drum Number"; }
+    td:nth-of-type(14):before { content: "Length"; }
+    td:nth-of-type(15):before { content: "Insulation Drum Number 1"; }
+    td:nth-of-type(16):before { content: "Insulation Drum Number 2"; }
+    td:nth-of-type(17):before { content: "Insulation Drum Number 3"; }
+    td:nth-of-type(18):before { content: "Insulation Drum Number 4"; }
+    td:nth-of-type(19):before { content: "Insulation Drum Number 5"; }
+}

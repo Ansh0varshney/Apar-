@@ -1,0 +1,372 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inner Data Input</title>
+    <link rel="stylesheet" href="CSS/insulation.css">
+    <style>
+        /* Additional styles for the tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .data-table {
+            margin-top: 30px;
+        }
+        /* Style for the auto-suggest dropdown */
+        .suggestions {
+            position: absolute;
+            background-color: white;
+            border: 1px solid #ccc;
+            max-height: 150px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1000;
+        }
+        .suggestions div {
+            padding: 8px;
+            cursor: pointer;
+        }
+        .suggestions div:hover {
+            background-color: #f1f1f1;
+        }
+    </style>
+</head>
+<body>
+    <h1>Armour Data Input</h1>
+    <div class="form-container">
+        <form id="armourForm" action="http://localhost:8000/armour" method="POST">
+            <table>
+                <tr>
+                    <th><label for="date">Date:</label></th>
+                    <td><input type="date" id="date" name="date" required></td>
+                </tr>
+                <tr>
+                    <th><label for="SO">SO Number:</label></th>
+                    <td><input type="number" id="SO" name="SO" required></td>
+                </tr>
+                <tr>
+                    <th><label for="customerName">Customer Name:</label></th>
+                    <td><input type="text" id="customerName" name="customerName"></td>
+                </tr>
+                <tr>
+                    <th><label for="size">Size:</label></th>
+                    <td><input type="text" id="size" name="size" required></td>
+                </tr>
+                <tr>
+                    <th><label for="drumNumber">Drum Number:</label></th>
+                    <td><input type="text" id="drumNumber" name="drumNumber" required></td>
+                </tr>
+                <tr>
+                    <th><label for="length">Length:</label></th>
+                    <td><input type="number" id="length" name="length" required></td>
+                </tr>
+                <tr>
+                    <th><label for="innerDrumNumber">Inner Sheath Drum Number:</label></th>
+                    <td>
+                        <input type="text" id="innerDrumNumber" name="innerDrumNumber" autocomplete="off">
+                        <div id="innerSuggestions" class="suggestions"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="lupDrumNumber">L-UP Drum Number:</label></th>
+                    <td>
+                        <input type="text" id="lupDrumNumber" name="lupDrumNumber" autocomplete="off">
+                        <div id="lupSuggestions" class="suggestions"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="insulationDrumNumber">Insulation Drum Number:</label></th>
+                    <td>
+                        <input type="text" id="insulationDrumNumber" name="insulationDrumNumber"  autocomplete="off">
+                        <div id="insulationSuggestions" class="suggestions"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <th><label for="remarks">Remarks:</label></th>
+                    <td><input type="text" id="remarks" name="remarks"></td>
+                </tr>
+
+            </table>
+            <div class="button-container">
+                <button type="submit">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <div id="inner-table" class="data-table">
+        <h2>Available Inner Sheath Data</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Length Available</th>
+                    <th>Drum Number</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Inner data will be populated here -->
+            </tbody>
+        </table>
+    </div>
+
+
+
+<!-- Table to display LUP data -->
+<div id="lup-table" class="data-table">
+    <h2>Available LUP Data</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Length Available</th>
+                <th>Drum Number</th>
+                <!-- Add more table headers as needed -->
+            </tr>
+        </thead>
+        <tbody>
+            <!-- LUP data will be populated here -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Table to display insulation data -->
+<div id="insulation-table" class="data-table">
+    <h2>Available Insulation Data</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Drum Number</th>
+                <th>Length Available</th>
+                <!-- Add more table headers as needed -->
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Insulation data will be populated here -->
+        </tbody>
+    </table>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchInnerData();
+        fetchLUPData();
+        fetchInsulationData();
+    });
+    
+    function fetchInnerData() {
+        fetch('http://localhost:8000/inners')
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.querySelector('#inner-table tbody');
+            tbody.innerHTML = '';
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${new Date(item.date).toLocaleDateString()}</td>
+                    <td>${item.length}</td>
+                    <td>${item.drumNumber}</td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            // Store Inner data for suggestions
+            window.inners = data;
+        })
+        .catch(error => {
+            console.error('Error fetching Inner data:', error);
+        });
+    }
+
+    function fetchLUPData() {
+        fetch('http://localhost:8000/LUPs')
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.querySelector('#lup-table tbody');
+            tbody.innerHTML = '';
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${new Date(item.date).toLocaleDateString()}</td>
+                    <td>${item.length}</td>
+                    <td>${item.drumNumber}</td>
+                    <!-- Add more table cells as needed -->
+                `;
+                tbody.appendChild(row);
+            });
+
+            // Store LUP data for suggestions
+            window.LUPs = data;
+        })
+        .catch(error => {
+            console.error('Error fetching LUP data:', error);
+        });
+    }
+
+    function fetchInsulationData() {
+        fetch('http://localhost:8000/insulations')
+        .then(response => response.json())
+        .then(data => {
+            const tbody = document.querySelector('#insulation-table tbody');
+            tbody.innerHTML = '';
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${new Date(item.date).toLocaleDateString()}</td>
+                    <td>${item.drumNumber}</td>
+                    <td>${item.insulatedLength}</td>
+                    <!-- Add more table cells as needed -->
+                `;
+                tbody.appendChild(row);
+            });
+
+            // Store insulation data for suggestions
+            window.insulations = data;
+        })
+        .catch(error => {
+            console.error('Error fetching insulation data:', error);
+        });
+    }
+    // Auto-suggest functionality for innerDrumNumber
+    const innerInput = document.getElementById('innerDrumNumber');
+        const innerSuggestionsDiv = document.getElementById('innerSuggestions');
+
+        innerInput.addEventListener('input', function() {
+            const value = this.value.toLowerCase();
+            const filteredInners = window.inners.filter(inner => 
+                inner.drumNumber.toLowerCase().includes(value)
+            );
+
+            innerSuggestionsDiv.innerHTML = '';
+            filteredInners.slice(0, 5).forEach(inner => {
+                const div = document.createElement('div');
+                div.textContent = inner.drumNumber;
+                div.onclick = function() {
+                    innerInput.value = inner.drumNumber;
+                    innerSuggestionsDiv.style.display = 'none';
+                };
+                innerSuggestionsDiv.appendChild(div);
+            });
+
+            innerSuggestionsDiv.style.display = filteredInners.length > 0 ? 'block' : 'none';
+        });
+
+    // Auto-suggest functionality for lupDrumNumber
+    const lupInput = document.getElementById('lupDrumNumber');
+    const lupSuggestionsDiv = document.getElementById('lupSuggestions');
+
+    lupInput.addEventListener('input', function() {
+        const value = this.value.toLowerCase();
+        const filteredLUPs = window.LUPs.filter(lup => 
+            lup.drumNumber.toLowerCase().includes(value)
+        );
+
+        lupSuggestionsDiv.innerHTML = '';
+        filteredLUPs.slice(0, 5).forEach(lup => {
+            const div = document.createElement('div');
+            div.textContent = lup.drumNumber;
+            div.onclick = function() {
+                lupInput.value = lup.drumNumber;
+                lupSuggestionsDiv.style.display = 'none';
+            };
+            lupSuggestionsDiv.appendChild(div);
+        });
+
+        lupSuggestionsDiv.style.display = filteredLUPs.length > 0 ? 'block' : 'none';
+    });
+
+    // Auto-suggest functionality for insulationDrumNumber
+    const insulationInput = document.getElementById('insulationDrumNumber');
+    const insulationSuggestionsDiv = document.getElementById('insulationSuggestions');
+
+    insulationInput.addEventListener('input', function() {
+        const value = this.value.toLowerCase();
+        const filteredInsulations = window.insulations.filter(insulation => 
+            insulation.drumNumber.toLowerCase().includes(value)
+        );
+
+        insulationSuggestionsDiv.innerHTML = '';
+        filteredInsulations.slice(0, 5).forEach(insulation => {
+            const div = document.createElement('div');
+            div.textContent = insulation.drumNumber;
+            div.onclick = function() {
+                insulationInput.value = insulation.drumNumber;
+                insulationSuggestionsDiv.style.display = 'none';
+            };
+            insulationSuggestionsDiv.appendChild(div);
+        });
+
+        insulationSuggestionsDiv.style.display = filteredInsulations.length > 0 ? 'block' : 'none';
+    });
+
+    document.addEventListener('click', function(e) {
+        if (e.target !== lupInput && e.target !== lupSuggestionsDiv) {
+            lupSuggestionsDiv.style.display = 'none';
+        }
+        if (e.target !== insulationInput && e.target !== insulationSuggestionsDiv) {
+            insulationSuggestionsDiv.style.display = 'none';
+        }
+    });
+
+    document.addEventListener('click', function(e) {
+            if (e.target !== innerInput && e.target !== innerSuggestionsDiv) {
+                innerSuggestionsDiv.style.display = 'none';
+            }
+            if (e.target !== lupInput && e.target !== lupSuggestionsDiv) {
+                lupSuggestionsDiv.style.display = 'none';
+            }
+            if (e.target !== insulationInput && e.target !== insulationSuggestionsDiv) {
+                insulationSuggestionsDiv.style.display = 'none';
+            }
+        });
+
+        document.getElementById('armourForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            if (confirm('Are you sure you want to submit the data?')) {
+            const formData = {
+                date: document.getElementById('date').value,
+                SO: document.getElementById('SO').value,
+                customerName: document.getElementById('customerName').value,
+                size: document.getElementById('size').value,
+                drumNumber: document.getElementById('drumNumber').value,
+                length: document.getElementById('length').value,
+                innerDrumNumber: document.getElementById('innerDrumNumber').value,
+                lupDrumNumber: document.getElementById('lupDrumNumber').value,
+                insulationDrumNumber: document.getElementById('insulationDrumNumber').value
+            };
+            
+            fetch('http://localhost:8000/armour', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                alert('Armour data submitted successfully!');
+                this.reset(); // Clear the form
+                fetchInnerData(); // Refresh Inner data
+                fetchLUPData(); // Refresh LUP data
+                fetchInsulationData(); // Refresh insulation data
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+                alert('Error submitting data.');
+            });
+        }
+        });
+    </script>
+</body>
+</html>
