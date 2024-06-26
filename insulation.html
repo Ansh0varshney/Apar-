@@ -45,7 +45,7 @@
 <body>
     <h1>Insulation Data Input</h1>
     <div class="form-container">
-        <form id="insulationForm" action="http://localhost:8000/insulation" method="POST">
+        <form id="insulationForm" action="https://apar.onrender.com/insulation" method="POST">
             <table>
                 <tr>
                     <th><label for="date">Date:</label></th>
@@ -145,7 +145,7 @@
             });
 
             function fetchConductorData() {
-                fetch('http://localhost:8000/conductors')
+                fetch('https://apar.onrender.com/conductors')
                 .then(response => response.json())
                 .then(data => {
                     const tbody = document.querySelector('#conductor-table tbody');
@@ -173,7 +173,7 @@
             }
 
             function fetchInsulationData() {
-                fetch('http://localhost:8000/insulations')
+                fetch('https://apar.onrender.com/insulations')
                 .then(response => response.json())
                 .then(data => {
                     const tbody = document.querySelector('#insulation-table tbody');
@@ -217,7 +217,7 @@
                 const newConductorDrumNumber = row.querySelector('.edit-conductor-drum-number').value;
                 const newRemarks = row.querySelector('.edit-remarks').value;
 
-                fetch(`http://localhost:8000/insulations/${entryId}`, {
+                fetch(`https://apar.onrender.com/insulations/${entryId}`, {
                     method: 'PATCH',
                     headers: {
                         'Content-Type': 'application/json'
@@ -247,7 +247,7 @@
                 const entryId = event.target.dataset.id;
 
                 if (confirm('Are you sure you want to make it to Final Good?')) {
-                    fetch(`http://localhost:8000/insulations/${entryId}`, {
+                    fetch(`https://apar.onrender.com/insulations/${entryId}`, {
                         method: 'DELETE'
                     })
                     .then(response => {
@@ -310,7 +310,7 @@
                     remarks: document.getElementById('remarks').value
                 };
                 
-                fetch('http://localhost:8000/insulation', {
+                fetch('https://apar.onrender.com/insulation', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(formData)
