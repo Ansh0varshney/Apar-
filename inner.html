@@ -46,7 +46,7 @@
 <body>
     <h1>Inner Data Input</h1>
     <div class="form-container">
-        <form id="innerForm" action="http://localhost:8000/inner" method="POST">
+        <form id="innerForm" action="https://apar.onrender.com/inner" method="POST">
             <table>
                 <tr>
                     <th><label for="date">Date:</label></th>
@@ -168,7 +168,7 @@
 
 
     function fetchInnerData() {
-    fetch('http://localhost:8000/inners')
+    fetch('https://apar.onrender.com/inners')
         .then(response => response.json())
         .then(data => {
             const tbody = document.querySelector('#inner-table tbody');
@@ -217,7 +217,7 @@ function updateInnerEntry(event) {
         remarks: newRemarks
     };
 
-    fetch(`http://localhost:8000/inners/${entryId}`, {
+    fetch(`https://apar.onrender.com/${entryId}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updatedData)
@@ -238,7 +238,7 @@ function deleteInnerEntry(event) {
     const entryId = event.target.dataset.id;
 
     if (confirm('Are you sure you want to do FG?')) {
-        fetch(`http://localhost:8000/inners/${entryId}`, {
+        fetch(`https://apar.onrender.com/inners/${entryId}`, {
             method: 'DELETE'
         })
         .then(response => {
@@ -259,7 +259,7 @@ function deleteInnerEntry(event) {
 
 
     function fetchLUPData() {
-        fetch('http://localhost:8000/LUPs')
+        fetch('https://apar.onrender.com/LUPs')
         .then(response => response.json())
         .then(data => {
             const tbody = document.querySelector('#lup-table tbody');
@@ -284,7 +284,7 @@ function deleteInnerEntry(event) {
     }
 
     function fetchInsulationData() {
-            fetch('http://localhost:8000/insulations')
+            fetch('https://apar.onrender.com/insulations')
                 .then(response => response.json())
                 .then(data => {
                     const tbody = document.querySelector('#insulation-table tbody');
@@ -381,7 +381,7 @@ function deleteInnerEntry(event) {
         remarks: document.getElementById('remarks').value  // Added line to collect remarks
     };
     
-    fetch('http://localhost:8000/inner', {
+    fetch('https://apar.onrender.com/inner', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
