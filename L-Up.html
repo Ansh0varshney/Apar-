@@ -170,7 +170,7 @@
         });
 
         function fetchInsulationData() {
-            fetch('http://localhost:8000/insulations')
+            fetch('https://apar.onrender.com/insulations')
                 .then(response => response.json())
                 .then(data => {
                     const tbody = document.querySelector('#insulation-table tbody');
@@ -196,7 +196,7 @@
             }
 
         function fetchLUPData() {
-            fetch('http://localhost:8000/LUPs')
+            fetch('https://apar.onrender.com/LUPs')
                 .then(response => response.json())
                 .then(data => {
                     const tbody = document.querySelector('#lup-table tbody');
@@ -251,7 +251,7 @@
                 remarks: newRemarks
             };
 
-            fetch(`http://localhost:8000/LUPs/${entryId}`, {
+            fetch(`https://apar.onrender.com/LUPs/${entryId}`, {
                 method: 'PATCH',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(updatedData)
@@ -349,7 +349,7 @@
                 remarks: document.getElementById('remarks').value
             };
 
-            fetch('http://localhost:8000/LUP', {
+            fetch('https://apar.onrender.com/LUP', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
