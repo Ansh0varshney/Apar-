@@ -11,7 +11,7 @@
 <body>
     <h1>Conductor Data Manual Input</h1>
     <div class="form-container">
-        <form id="conductorForm" action="http://localhost:8000/conductor" method="POST">
+        <form id="conductorForm" action="https://apar.onrender.com/conductor" method="POST">
             <table>
                 <tr>
                     <th><label for="date">Date:</label></th>
@@ -99,7 +99,7 @@
                     remarks: document.getElementById('remarks').value
                 };
 
-                fetch('http://localhost:8000/conductor', {
+                fetch('https://apar.onrender.com/conductor', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(formData)
@@ -119,7 +119,7 @@
             });
 
             function fetchData() {
-    fetch('http://localhost:8000/conductors')
+    fetch('https://apar.onrender.com/conductors')
         .then(response => response.json())
         .then(data => {
             const tbody = document.querySelector('#data-table tbody');
@@ -161,7 +161,7 @@ function updateEntry(event) {
     const newBalanceLength = row.querySelector('.edit-balance-length').value;
     const newRemarks = row.querySelector('.edit-remarks').value;
 
-    fetch(`http://localhost:8000/conductors/${entryId}`, {
+    fetch(`https://apar.onrender.com/conductors/${entryId}`, {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json'
@@ -190,7 +190,7 @@ function updateEntry(event) {
             function deleteEntry(event) {
                 const entryId = event.target.dataset.id;
                 if (confirm(`Are you sure you want to delete the entry with ID ${entryId}?`)) {
-                    fetch(`http://localhost:8000/conductors/${entryId}`, {
+                    fetch(`https://apar.onrender.com/conductors/${entryId}`, {
                         method: 'DELETE'
                     })
                     .then(response => {
