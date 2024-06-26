@@ -137,12 +137,12 @@
     <script>
         function fetchData() {
             Promise.all([
-                fetch('http://localhost:8000/conductors').then(response => response.json()),
-                fetch('http://localhost:8000/insulations').then(response => response.json()),
-                fetch('http://localhost:8000/LUPs').then(response => response.json()),
-                fetch('http://localhost:8000/inners').then(response => response.json()),
-                fetch('http://localhost:8000/armours').then(response => response.json()),
-                fetch('http://localhost:8000/outers').then(response => response.json())
+                fetch('https://apar.onrender.com/conductors').then(response => response.json()),
+                fetch('https://apar.onrender.com/insulations').then(response => response.json()),
+                fetch('https://apar.onrender.com/LUPs').then(response => response.json()),
+                fetch('https://apar.onrender.com/inners').then(response => response.json()),
+                fetch('https://apar.onrender.com/armours').then(response => response.json()),
+                fetch('https://apar.onrender.com/outers').then(response => response.json())
             ])
             .then(([conductors, insulators, lups, inners, armours, outers]) => {
                 const conductorTbody = document.querySelector('#conductor-table tbody');
