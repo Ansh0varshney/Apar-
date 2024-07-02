@@ -46,7 +46,7 @@
 <body>
     <h1>Armour Data Input</h1>
     <div class="form-container">
-        <form id="armourForm" action="http://localhost:8000/armour" method="POST">
+        <form id="armourForm" action="https://apar.onrender.com" method="POST">
             <table>
                 <tr>
                     <th><label for="date">Date:</label></th>
@@ -105,6 +105,30 @@
         </form>
     </div>
 
+
+    
+    <div id="armour-table" class="data-table">
+        <h2>Available Armour Data</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Drum Number</th>
+                    <th>Length</th>
+                    <th>Inner Sheath Drum Number</th>
+                    <th>LUP Drum Number</th>
+                    <th>Insulation Drum Number</th>
+                    <th>Remarks</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Armour data will be populated here -->
+            </tbody>
+        </table>
+    </div>
+
+    
     <div id="inner-table" class="data-table">
         <h2>Available Inner Sheath Data</h2>
         <table>
@@ -164,10 +188,101 @@
         fetchInnerData();
         fetchLUPData();
         fetchInsulationData();
+        fetchArmourData();
     });
+
+    function fetchArmourData() {
+        fetch('https://apar.onrender.com/armours')
+         .then(response => response.json())
+         .then(data => {
+            const tbody = document.querySelector('#armour-table tbody');
+            tbody.innerHTML = '';
+            data.forEach(item => {
+                const row = document.createElement('tr');
+                const remarksNotOK = item.remarks && item.remarks.toLowerCase() !== 'ok';
+                row.innerHTML = `
+                    <td>${new Date(item.date).toLocaleDateString()}</td>
+                    <td>${remarksNotOK ? `<input type="text" value="${item.drumNumber}" class="edit-drum-number" data-id="${item._id}">` : item.drumNumber}</td>
+                    <td>${remarksNotOK ? `<input type="number" value="${item.length}" class="edit-length" data-id="${item._id}">` : item.length}</td>
+                    <td>${item.innerDrumNumber}</td>
+                    <td>${item.lupDrumNumber}</td>
+                    <td>${item.insulationDrumNumber}</td>
+                    <td>${remarksNotOK ? `<input type="text" value="${item.remarks}" class="edit-remarks" data-id="${item._id}">` : item.remarks}</td>
+                    <td>${remarksNotOK ? `<button class="update-btn" data-id="${item._id}">Rewinding</button>` : ''} <button class="delete-btn" data-id="${item._id}">FG</button></td>
+                `;
+                tbody.appendChild(row);
+            });
+            
+            // Add event listeners for delete and update buttons
+            const deleteButtons = document.querySelectorAll('.delete-btn');
+            deleteButtons.forEach(button => {
+                button.addEventListener('click', deleteArmourEntry);
+            });
+
+            const updateButtons = document.querySelectorAll('.update-btn');
+            updateButtons.forEach(button => {
+                button.addEventListener('click', updateArmourEntry);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching inner data:', error);
+        });
+}
+
+function updateArmourEntry(event) {
+    const entryId = event.target.dataset.id;
+    const row = event.target.closest('tr');
+    const newDrumNumber = row.querySelector('.edit-drum-number').value;
+    const newLength = row.querySelector('.edit-length').value;
+    const newRemarks = row.querySelector('.edit-remarks').value;
+
+    const updatedData = {
+        drumNumber: newDrumNumber,
+        length: newLength,
+        remarks: newRemarks
+    };
+
+    fetch(`https://apar.onrender.com/armours/${entryId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Success:', data);
+        alert('Rewinding completed successfully');
+        fetchArmourData(); // Refresh the data
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        alert('Update unsuccessful.');
+    });
+}
+
+function deleteArmourEntry(event) {
+    const entryId = event.target.dataset.id;
+
+    if (confirm('Are you sure you want to mark this as FG?')) {
+        fetch(`https://apar.onrender.com/armours/${entryId}`, {
+            method: 'DELETE'
+        })
+        .then(response => {
+            if (response.ok) {
+                alert('FG marked successfully');
+                fetchArmourData(); // Refresh armour data
+            } else {
+                alert('Failed to mark as FG');
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting entry:', error);
+            alert('Error marking as FG');
+        });
+    }
+}
     
     function fetchInnerData() {
-        fetch('http://localhost:8000/inners')
+        fetch('https://apar.onrender.com/inners')
         .then(response => response.json())
         .then(data => {
             const tbody = document.querySelector('#inner-table tbody');
@@ -191,7 +306,7 @@
     }
 
     function fetchLUPData() {
-        fetch('http://localhost:8000/LUPs')
+        fetch('https://apar.onrender.com/LUPs')
         .then(response => response.json())
         .then(data => {
             const tbody = document.querySelector('#lup-table tbody');
@@ -216,7 +331,7 @@
     }
 
     function fetchInsulationData() {
-        fetch('http://localhost:8000/insulations')
+        fetch('https://apar.onrender.com/insulations')
         .then(response => response.json())
         .then(data => {
             const tbody = document.querySelector('#insulation-table tbody');
@@ -347,7 +462,7 @@
                 insulationDrumNumber: document.getElementById('insulationDrumNumber').value
             };
             
-            fetch('http://localhost:8000/armour', {
+            fetch('https://apar.onrender.com/armour', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
