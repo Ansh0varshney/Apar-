@@ -317,6 +317,49 @@ const outerSchema = new mongoose.Schema({
     insulationDrumNumber: { type: String, required: false }
 });
 
+
+// DELETE route
+app.delete('/outers/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        console.log(`Attempting to delete entry with ID: ${id}`);
+        const result = await Outer.deleteOne({ _id: id });
+        if (result.deletedCount === 1) {
+            res.status(200).send('Entry deleted successfully');
+        } else {
+            res.status(404).send('Entry not found');
+        }
+    } catch (error) {
+        console.error('Error deleting inner entry:', error);
+        res.status(500).send('Error deleting entry');
+    }
+});
+
+// PATCH route
+app.patch('/outers/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const update = req.body;
+        console.log(`Attempting to update entry with ID: ${id} with data:`, update);
+
+        // If remarks is set to "OK", prevent further updates
+        if (update.remarks && update.remarks.toLowerCase() === 'ok') {
+            update.hasBeenUpdated = true;
+        }
+
+        const result = await Outer.findByIdAndUpdate(id, update, { new: true });
+        if (result) {
+            res.status(200).json(result);
+        } else {
+            res.status(404).send('Entry not found');
+        }
+    } catch (error) {
+        console.error('Error updating outer entry:', error);
+        res.status(500).send('Error updating entry');
+    }
+});
+
+
 const Conductor = mongoose.model('Conductor', conductorSchema);
 const Insulation = mongoose.model('Insulation', insulationSchema);
 const LUP = mongoose.model('LUP', LUPSchema);
