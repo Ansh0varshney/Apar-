@@ -1,137 +1,151 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Inner Data Input</title>
-    <link rel="stylesheet" href="CSS/insulation.css" />
-    <style>
-      /* Additional styles for the tables */
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-      }
-      th,
-      td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: left;
-      }
-      th {
-        background-color: #f2f2f2;
-      }
-      .data-table {
-        margin-top: 30px;
-      }
-      /* Style for the auto-suggest dropdown */
-      .suggestions {
-        position: absolute;
-        background-color: white;
-        border: 1px solid #ccc;
-        max-height: 150px;
-        overflow-y: auto;
-        display: none;
-        z-index: 1000;
-      }
-      .suggestions div {
-        padding: 8px;
-        cursor: pointer;
-      }
-      .suggestions div:hover {
-        background-color: #f1f1f1;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Outer Sheath Data Input</h1>
-    <div class="form-container">
-      <form id="outerForm" action="http://localhost:8000/outer" method="POST">
-        <table>
-          <tr>
-            <th><label for="date">Date:</label></th>
-            <td><input type="date" id="date" name="date" required /></td>
-          </tr>
-          <tr>
-            <th><label for="SO">SO Number:</label></th>
-            <td><input type="number" id="SO" name="SO" required /></td>
-          </tr>
-          <tr>
-            <th><label for="customerName">Customer Name:</label></th>
-            <td><input type="text" id="customerName" name="customerName" /></td>
-          </tr>
-          <tr>
-            <th><label for="size">Size:</label></th>
-            <td><input type="text" id="size" name="size" required /></td>
-          </tr>
-          <tr>
-            <th><label for="drumNumber">Drum Number:</label></th>
-            <td>
-              <input type="text" id="drumNumber" name="drumNumber" required />
-            </td>
-          </tr>
-          <tr>
-            <th><label for="length">Length:</label></th>
-            <td><input type="number" id="length" name="length" required /></td>
-          </tr>
-          <tr>
-            <th><label for="armourDrumNumber">Armour Drum Number:</label></th>
-            <td>
-              <input
-                type="text"
-                id="armourDrumNumber"
-                name="armourDrumNumber"
-                autocomplete="off"
-              />
-              <div id="armourSuggestions" class="suggestions"></div>
-            </td>
-          </tr>
-          <tr>
-            <th>
-              <label for="innerDrumNumber">Inner Sheath Drum Number:</label>
-            </th>
-            <td>
-              <input
-                type="text"
-                id="innerDrumNumber"
-                name="innerDrumNumber"
-                autocomplete="off"
-              />
-              <div id="innerSuggestions" class="suggestions"></div>
-            </td>
-          </tr>
-          <tr>
-            <th><label for="lupDrumNumber">L-UP Drum Number:</label></th>
-            <td>
-              <input
-                type="text"
-                id="lupDrumNumber"
-                name="lupDrumNumber"
-                autocomplete="off"
-              />
-              <div id="lupSuggestions" class="suggestions"></div>
-            </td>
-          </tr>
-          <tr>
-            <th>
-              <label for="insulationDrumNumber">Insulation Drum Number:</label>
-            </th>
-            <td>
-              <input
-                type="text"
-                id="insulationDrumNumber"
-                name="insulationDrumNumber"
-                autocomplete="off"
-              />
-              <div id="insulationSuggestions" class="suggestions"></div>
-            </td>
-          </tr>
-        </table>
-        <div class="button-container">
-          <button type="submit">Submit</button>
-        </div>
-      </form>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inner Data Input</title>
+  <link rel="stylesheet" href="CSS/conductor.css" />
+  <style>
+    /* Additional styles for the tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .data-table {
+      margin-top: 30px;
+    }
+
+    /* Style for the auto-suggest dropdown */
+    .suggestions {
+      position: absolute;
+      background-color: white;
+      border: 1px solid #ccc;
+      max-height: 150px;
+      overflow-y: auto;
+      display: none;
+      z-index: 1000;
+    }
+
+    .suggestions div {
+      padding: 8px;
+      cursor: pointer;
+    }
+
+    .suggestions div:hover {
+      background-color: #f1f1f1;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Outer Sheath Data Input</h1>
+  <div class="form-container">
+    <form id="outerForm" action="http://localhost:8000/outer" method="POST">
+      <table>
+        <tr>
+          <th><label for="date">Date:</label></th>
+          <td><input type="date" id="date" name="date" required /></td>
+        </tr>
+        <tr>
+          <th><label for="SO">SO Number:</label></th>
+          <td><input type="number" id="SO" name="SO" required /></td>
+        </tr>
+        <tr>
+          <th><label for="customerName">Customer Name:</label></th>
+          <td><input type="text" id="customerName" name="customerName" /></td>
+        </tr>
+        <tr>
+          <th><label for="size">Size:</label></th>
+          <td><input type="text" id="size" name="size" required /></td>
+        </tr>
+        <tr>
+          <th><label for="drumNumber">Drum Number:</label></th>
+          <td>
+            <input type="text" id="drumNumber" name="drumNumber" required />
+          </td>
+        </tr>
+        <tr>
+          <th><label for="length">Length:</label></th>
+          <td><input type="number" id="length" name="length" required /></td>
+        </tr>
+        <tr>
+          <th><label for="armourDrumNumber">Armour Drum Number:</label></th>
+          <td>
+            <input type="text" id="armourDrumNumber" name="armourDrumNumber" autocomplete="off" />
+            <div id="armourSuggestions" class="suggestions"></div>
+          </td>
+        </tr>
+        <tr>
+          <th>
+            <label for="innerDrumNumber">Inner Sheath Drum Number:</label>
+          </th>
+          <td>
+            <input type="text" id="innerDrumNumber" name="innerDrumNumber" autocomplete="off" />
+            <div id="innerSuggestions" class="suggestions"></div>
+          </td>
+        </tr>
+        <tr>
+          <th><label for="lupDrumNumber">L-UP Drum Number:</label></th>
+          <td>
+            <input type="text" id="lupDrumNumber" name="lupDrumNumber" autocomplete="off" />
+            <div id="lupSuggestions" class="suggestions"></div>
+          </td>
+        </tr>
+        <tr>
+          <th>
+            <label for="insulationDrumNumber">Insulation Drum Number:</label>
+          </th>
+          <td>
+            <input type="text" id="insulationDrumNumber" name="insulationDrumNumber" autocomplete="off" />
+            <div id="insulationSuggestions" class="suggestions"></div>
+          </td>
+        </tr>
+        <tr>
+          <th><label for="remarks">Remarks:</label></th>
+          <td><input type="text" id="remarks" name="remarks"></td>
+        </tr>
+      </table>
+      <div class="button-container">
+        <button type="submit">Submit</button>
+      </div>
+    </form>
+
+    <!-- Table to display outer data -->
+    <div id="outer-table" class="data-table">
+      <h2>Available Outer Data</h2>
+      <table>
+          <thead>
+              <tr>
+                  <th>Date</th>
+                  <th>Drum Number</th>
+                  <th>Length Used</th>
+                  <th>Conductor Drum Number</th>
+                  <th>Remarks</th>
+                  <th>Action</th>
+              </tr>
+          </thead>
+          <tbody>
+              <!-- Outer data will be populated here -->
+          </tbody>
+      </table>
     </div>
+
+
+
 
     <div id="armour-table" class="data-table">
       <h2>Available Armour Data</h2>
@@ -207,31 +221,122 @@
         fetchLUPData();
         fetchInsulationData();
         fetchArmourData();
+        fetchOuterData();
       });
 
-      function fetchArmourData() {
-        fetch("http://localhost:8000/armours")
-          .then((response) => response.json())
-          .then((data) => {
-            const tbody = document.querySelector("#armour-table tbody");
-            tbody.innerHTML = "";
-            data.forEach((item) => {
-              const row = document.createElement("tr");
-              row.innerHTML = `
+      function fetchOuterData() {
+          fetch('http://localhost:8000/outers')
+            .then(response => response.json())
+            .then(data => {
+              const tbody = document.querySelector('#outer-table tbody');
+              tbody.innerHTML = '';
+              data.forEach(item => {
+                const row = document.createElement('tr');
+                const remarksNotOK = item.remarks && item.remarks.toLowerCase() !== 'ok';
+                row.innerHTML = `
+                            <td>${new Date(item.date).toLocaleDateString()}</td>
+                            <td>${remarksNotOK ? `<input type="text" value="${item.drumNumber}" class="edit-drum-number" data-id="${item._id}">` : item.drumNumber}</td>
+                            <td>${remarksNotOK ? `<input type="number" value="${item.length}" class="edit-insulated-length" data-id="${item._id}">` : item.length}</td>
+                            <td>${remarksNotOK ? `<input type="text" value="${item.remarks}" class="edit-remarks" data-id="${item._id}">` : item.remarks}</td>
+                            <td>${remarksNotOK ? `<button class="update-btn" data-id="${item._id}">Rewinding</button>` : ''} <button class="delete-btn" data-id="${item._id}">FG</button></td>
+                        `;
+                tbody.appendChild(row);
+              });
+
+              // Add event listener for delete buttons
+              const deleteButtons = document.querySelectorAll('.delete-btn');
+              deleteButtons.forEach(button => {
+                button.addEventListener('click', deleteEntry);
+              });
+
+              // Add event listener for update buttons
+              const updateButtons = document.querySelectorAll('.update-btn');
+              updateButtons.forEach(button => {
+                button.addEventListener('click', updateEntry);
+              });
+            })
+            .catch(error => {
+              console.error('Error fetching outer data:', error);
+            });
+        }
+
+        function updateEntry(event) {
+          const entryId = event.target.dataset.id;
+          const row = event.target.closest('tr');
+          const newDrumNumber = row.querySelector('.edit-drum-number').value;
+          const newLength = row.querySelector('.edit-insulated-length').value;
+          const newRemarks = row.querySelector('.edit-remarks').value;
+
+          fetch(`http://localhost:8000/outers/${entryId}`, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              drumNumber: newDrumNumber,
+              length: newLength,
+              remarks: newRemarks
+            })
+          })
+            .then(response => {
+              if (response.ok) {
+                alert('Entry updated successfully');
+                fetchOuterData(); // Refresh insulation data
+              } else {
+                alert('Failed to update entry');
+              }
+            })
+            .catch(error => {
+              console.error('Error updating entry:', error);
+              alert('Error updating entry');
+            });
+        }
+
+        function deleteEntry(event) {
+          const entryId = event.target.dataset.id;
+
+          if (confirm('Are you sure you want to make it to Final Good?')) {
+            fetch(`http://localhost:8000/outers/${entryId}`, {
+              method: 'DELETE'
+            })
+              .then(response => {
+                if (response.ok) {
+                  alert('HOORAHHH!!! Final Good done Successfully ');
+                  fetchOuterData(); // Refresh insulation data
+                } else {
+                  alert('Failed to delete entry');
+                }
+              })
+              .catch(error => {
+                console.error('Error deleting entry:', error);
+                alert('Error deleting entry');
+              });
+          }
+        }
+
+        function fetchArmourData() {
+          fetch("http://localhost:8000/armours")
+            .then((response) => response.json())
+            .then((data) => {
+              const tbody = document.querySelector("#armour-table tbody");
+              tbody.innerHTML = "";
+              data.forEach((item) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
                     <td>${new Date(item.date).toLocaleDateString()}</td>
                     <td>${item.length}</td>
                     <td>${item.drumNumber}</td>
                 `;
-              tbody.appendChild(row);
-            });
+                tbody.appendChild(row);
+              });
 
-            // Store Inner data for suggestions
-            window.armours = data;
-          })
-          .catch((error) => {
-            console.error("Error fetching Armour data:", error);
-          });
-      }
+              // Store Inner data for suggestions
+              window.armours = data;
+            })
+            .catch((error) => {
+              console.error("Error fetching Armour data:", error);
+            });
+        }
 
       function fetchInnerData() {
         fetch("http://localhost:8000/inners")
@@ -345,7 +450,7 @@
         innerSuggestionsDiv.innerHTML = "";
         filteredInners.slice(0, 5).forEach((inner) => {
           const div = document.createElement("div");
-          div.textContent = inner.drumNumber;
+          div.textContent = div.textContent = `${inner.drumNumber} (${inner.size}, ${inner.length}m)`;;
           div.onclick = function () {
             innerInput.value = inner.drumNumber;
             innerSuggestionsDiv.style.display = "none";
@@ -370,7 +475,7 @@
         lupSuggestionsDiv.innerHTML = "";
         filteredLUPs.slice(0, 5).forEach((lup) => {
           const div = document.createElement("div");
-          div.textContent = lup.drumNumber;
+          div.textContent = div.textContent = `${lup.drumNumber} (${lup.size}, ${lup.length}m)`;;
           div.onclick = function () {
             lupInput.value = lup.drumNumber;
             lupSuggestionsDiv.style.display = "none";
@@ -397,7 +502,7 @@
         insulationSuggestionsDiv.innerHTML = "";
         filteredInsulations.slice(0, 5).forEach((insulation) => {
           const div = document.createElement("div");
-          div.textContent = insulation.drumNumber;
+          div.textContent = `${insulation.drumNumber} (${insulation.size}, ${insulation.length}m)`;
           div.onclick = function () {
             insulationInput.value = insulation.drumNumber;
             insulationSuggestionsDiv.style.display = "none";
@@ -441,44 +546,48 @@
         .addEventListener("submit", function (event) {
           event.preventDefault();
           if (confirm('Are you sure you want to submit the data?')) {
-          const formData = {
-            date: document.getElementById("date").value,
-            SO: document.getElementById("SO").value,
-            customerName: document.getElementById("customerName").value,
-            size: document.getElementById("size").value,
-            drumNumber: document.getElementById("drumNumber").value,
-            length: document.getElementById("length").value,
-            armourDrumNumber: document.getElementById("armourDrumNumber").value,
-            innerDrumNumber: document.getElementById("innerDrumNumber").value,
-            lupDrumNumber: document.getElementById("lupDrumNumber").value,
-            insulationDrumNumber: document.getElementById(
-              "insulationDrumNumber"
-            ).value,
-          };
+            const formData = {
+              date: document.getElementById("date").value,
+              SO: document.getElementById("SO").value,
+              customerName: document.getElementById("customerName").value,
+              size: document.getElementById("size").value,
+              drumNumber: document.getElementById("drumNumber").value,
+              length: document.getElementById("length").value,
+              armourDrumNumber: document.getElementById("armourDrumNumber").value,
+              innerDrumNumber: document.getElementById("innerDrumNumber").value,
+              lupDrumNumber: document.getElementById("lupDrumNumber").value,
+              insulationDrumNumber: document.getElementById(
+                "insulationDrumNumber"
+              ).value,
+              remarks: document.getElementById("remarks").value  // Add this line
+            };
 
-          console.log("Sending data:", formData); // Log formData here
+            console.log("Sending data:", formData); // Log formData here
 
-          fetch("http://localhost:8000/outer", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(formData),
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              console.log("Success:", data);
-              alert("Outer data submitted successfully!");
-              this.reset(); // Clear the form
-              fetchArmourData(); // Refresh armour data
-              fetchInnerData(); // Refresh inner data
-              fetchLUPData(); // Refresh LUP data
-              fetchInsulationData(); // Refresh insulation data
+            fetch("http://localhost:8000/outer", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(formData),
             })
-            .catch((error) => {
-              console.error("Error:", error);
-              alert("Error submitting data.");
-            });
+              .then((response) => response.json())
+              .then((data) => {
+                console.log("Success:", data);
+                alert("Outer data submitted successfully!");
+                this.reset(); // Clear the form
+                fetchArmourData(); // Refresh armour data
+                fetchInnerData(); // Refresh inner data
+                fetchLUPData(); // Refresh LUP data
+                fetchInsulationData(); // Refresh insulation data
+                fetchOuterData(); 
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+                alert("Error submitting data.");
+              });
           }
         });
     </script>
-  </body>
+  </div>
+</body>
+
 </html>
