@@ -54,7 +54,7 @@
 <body>
   <h1>Outer Sheath Data Input</h1>
   <div class="form-container">
-    <form id="outerForm" action="http://localhost:8000/outer" method="POST">
+    <form id="outerForm" action="https://apar.onrender.com/outer" method="POST">
       <table>
         <tr>
           <th><label for="date">Date:</label></th>
@@ -225,7 +225,7 @@
       });
 
       function fetchOuterData() {
-          fetch('http://localhost:8000/outers')
+          fetch('https://apar.onrender.com/outers')
             .then(response => response.json())
             .then(data => {
               const tbody = document.querySelector('#outer-table tbody');
@@ -267,7 +267,7 @@
           const newLength = row.querySelector('.edit-insulated-length').value;
           const newRemarks = row.querySelector('.edit-remarks').value;
 
-          fetch(`http://localhost:8000/outers/${entryId}`, {
+          fetch(`https://apar.onrender.com/outers/${entryId}`, {
             method: 'PATCH',
             headers: {
               'Content-Type': 'application/json'
@@ -296,7 +296,7 @@
           const entryId = event.target.dataset.id;
 
           if (confirm('Are you sure you want to make it to Final Good?')) {
-            fetch(`http://localhost:8000/outers/${entryId}`, {
+            fetch(`https://apar.onrender.com/outers/${entryId}`, {
               method: 'DELETE'
             })
               .then(response => {
@@ -315,7 +315,7 @@
         }
 
         function fetchArmourData() {
-          fetch("http://localhost:8000/armours")
+          fetch("https://apar.onrender.com/armours")
             .then((response) => response.json())
             .then((data) => {
               const tbody = document.querySelector("#armour-table tbody");
@@ -339,7 +339,7 @@
         }
 
       function fetchInnerData() {
-        fetch("http://localhost:8000/inners")
+        fetch("https://apar.onrender.com/inners")
           .then((response) => response.json())
           .then((data) => {
             const tbody = document.querySelector("#inner-table tbody");
@@ -363,7 +363,7 @@
       }
 
       function fetchLUPData() {
-        fetch("http://localhost:8000/LUPs")
+        fetch("https://apar.onrender.com/LUPs")
           .then((response) => response.json())
           .then((data) => {
             const tbody = document.querySelector("#lup-table tbody");
@@ -388,7 +388,7 @@
       }
 
       function fetchInsulationData() {
-        fetch("http://localhost:8000/insulations")
+        fetch("https://apar.onrender.com/insulations")
           .then((response) => response.json())
           .then((data) => {
             const tbody = document.querySelector("#insulation-table tbody");
@@ -564,7 +564,7 @@
 
             console.log("Sending data:", formData); // Log formData here
 
-            fetch("http://localhost:8000/outer", {
+            fetch("https://apar.onrender.com/outer", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify(formData),
