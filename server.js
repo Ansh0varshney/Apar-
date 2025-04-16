@@ -1,3 +1,7 @@
+require('dotenv').config();
+const uri = process.env.URI;
+console.log("uri: ", uri); // To verify it's working
+
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -16,7 +20,9 @@ app.use(cors());
 app.use(express.static(__dirname));
 
 // MongoDB Atlas connection URI
-const uri = "mongodb+srv://anshv0606:rn5jUr2aPjSudUUK@clusterapar.asemiel.mongodb.net/?retryWrites=true&w=majority&appName=ClusterAPAR";
+// const uri = "mongodb+srv://anshv0606:rn5jUr2aPjSudUUK@clusterapar.asemiel.mongodb.net/?retryWrites=true&w=majority&appName=ClusterAPAR";
+// const uri = process.env.uri
+
 
 // Connect to MongoDB Atlas
 mongoose.connect(uri, { 
